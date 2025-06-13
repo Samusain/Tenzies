@@ -5,11 +5,11 @@ import { nanoid } from "nanoid"
 import Confetti from "react-confetti"
 
 export default function App() {
-    const [dice, setDice] = useState(() => generateAllNewDice())
-    const buttonRef = useRef(null)
+    const [dice, setDice] = useState(() => generateAllNewDice())//initializes 10dice with random values using a function to avoid generating new dice on every render
+    const buttonRef = useRef(null)//tracks the button element to focus on it when the game is won
 
     const gameWon = dice.every(die => die.isHeld) &&
-        dice.every(die => die.value === dice[0].value)
+        dice.every(die => die.value === dice[0].value)//checks if all dice are held and have matching values
         
     useEffect(() => {
         if (gameWon) {
@@ -18,6 +18,7 @@ export default function App() {
     }, [gameWon])
 
     function generateAllNewDice() {
+        // This function generates an array of 10 dice objects with random values, unique IDs and initial unheld state
         return new Array(10)
             .fill(0)
             .map(() => ({
@@ -28,6 +29,8 @@ export default function App() {
     }
     
     function rollDice() {
+        //This function rolls the dice, keeping held dice unchanged and generating new values for unheld dice
+        //If the game is won, it generates a new set of dice
         if (!gameWon) {
             setDice(oldDice => oldDice.map(die =>
                 die.isHeld ?
@@ -40,6 +43,7 @@ export default function App() {
     }
 
     function hold(id) {
+        //This function toggles the isHeld state of a die based on its ID
         setDice(oldDice => oldDice.map(die =>
             die.id === id ?
                 { ...die, isHeld: !die.isHeld } :
